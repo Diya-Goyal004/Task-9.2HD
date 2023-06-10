@@ -1,0 +1,132 @@
+int m1 = 4;
+int m2 = 5;
+int m3 = 6;
+int m4 = 7;
+char input;     // to store input character received via BT.
+
+void setup()
+{
+ pinMode(m1, OUTPUT);
+  pinMode(m2, OUTPUT);
+  pinMode(m3, OUTPUT);
+  pinMode(m4, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  if (Serial.available() > 0)
+  {
+    input = Serial.read();
+
+    switch (input)
+    {
+      case 'F':
+        Forward();
+        break;
+      case 'G':
+        Backward();
+        break;
+      case 'L':
+        Left();
+        break;
+      case 'R':
+        Right();
+        break;
+      case 'S':
+        Stop();
+        break;
+      case 'C':
+        customRun();
+        break;
+    }
+  }
+}
+
+void customRun()
+{
+  String command;
+
+  while (Serial.available() == 0)
+  {
+    // Wait for data to be available
+  }
+
+  while (Serial.available() > 0)
+  {
+    command += Serial.read();
+    delay(10);
+  }
+
+  int separatorIndex = command.indexOf('-');
+
+  if (separatorIndex != -1)
+  {
+    String direction = command.substring(0, separatorIndex);
+    String timeStr = command.substring(separatorIndex + 1);
+
+    int time = timeStr.toInt();
+
+    if (direction == "Forward")
+    {
+      Forward();
+      delay(time * 1000);
+      Stop();
+    }
+    else if (direction == "Backward")
+    {
+      Backward();
+      delay(time * 1000);
+      Stop();
+    }
+    else if (direction == "Right")
+    {
+      Right();
+      delay(time * 1000);
+      Stop();
+    }
+    else if (direction == "Left")
+    {
+      Left();
+      delay(time * 1000);
+      Stop();
+    }
+  }
+}
+
+
+// RIGHT FUNCTION
+void Right() {
+  digitalWrite(m2, LOW);
+  digitalWrite(m1, HIGH);
+  digitalWrite(m3, LOW);
+  digitalWrite(m4, HIGH);
+}
+//STOP FUNCTION
+void Stop() {
+  digitalWrite(m2, LOW);
+  digitalWrite(m1, LOW);
+  digitalWrite(m3, LOW);
+  digitalWrite(m4, LOW);
+}
+//LEFT FUNCTION
+void Left() {
+  digitalWrite(m2, HIGH);
+  digitalWrite(m1, LOW);
+  digitalWrite(m3, HIGH);
+  digitalWrite(m4, LOW);
+}
+//FORWARD FUNCTION
+void Forward() {
+  digitalWrite(m2, LOW);
+  digitalWrite(m1, HIGH);
+  digitalWrite(m3, HIGH);
+  digitalWrite(m4, LOW);
+}
+//BACKWARD FUNCTION
+void Backward() {
+  digitalWrite(m2, HIGH);
+  digitalWrite(m1, LOW);
+  digitalWrite(m3, LOW);
+  digitalWrite(m4, HIGH);
+}
